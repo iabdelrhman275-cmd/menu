@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شبكة الإمارات - Emirates Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #c5a059; --dark: #080808; --card: #151515; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        body { background: var(--dark); color: white; overflow: hidden; }
+
+        /* الشاشة الرئيسية التفاعلية */
+        #home {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; position: relative;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2000') center/cover;
+            animation: bgZoom 25s infinite alternate;
+        }
+        @keyframes bgZoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+        .dots { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 50px 50px; opacity: 0.1; }
+
+        .lang-nav { position: absolute; top: 40px; display: flex; gap: 20px; z-index: 1000; }
+        .l-btn { border: 2px solid var(--gold); padding: 12px 35px; background: rgba(0,0,0,0.5); color: white; cursor: pointer; font-weight: 900; transition: 0.3s; }
+        .l-btn.active { background: var(--gold); color: black; }
+
+        .main-logo { font-size: clamp(3.5rem, 12vw, 7rem); font-weight: 900; text-shadow: 0 0 40px rgba(197, 160, 89, 0.6); margin-bottom: 10px; }
+        
+        .btn-enter {
+            margin-top: 40px; padding: 22px 80px; font-size: 2rem; background: var(--gold);
+            color: black; border: none; font-weight: 900; cursor: pointer;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5); transition: 0.5s;
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+        }
+        .btn-enter:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 20px 50px var(--gold); }
+
+        .contact-footer { position: absolute; bottom: 40px; width: 100%; z-index: 10; }
+        .big-phone { font-size: 3rem; color: var(--gold); font-weight: 900; text-decoration: none; display: block; margin-bottom: 15px; }
+        
+        .map-link { 
+            color: #00f2ff; font-size: 1.4rem; font-weight: bold; text-decoration: none; 
+            border-bottom: 2px solid #00f2ff; padding-bottom: 3px; transition: 0.3s;
+        }
+        .map-link:hover { color: white; border-color: white; }
+
+        /* المنيو والأنيميشن */
+        #menu { 
+            display: none; height: 100vh; overflow-y: auto; padding: 80px 20px; 
+            background: var(--dark); position: fixed; top: 0; left: 0; width: 100%; z-index: 500;
+        }
+        .menu-in { animation: menuSlideIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes menuSlideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .menu-out { animation: menuDrop 1.2s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards; }
+        @keyframes menuDrop { to { transform: translateY(120vh) rotate(5deg); opacity: 0; } }
+
+        .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; max-width: 1400px; margin: auto; padding-bottom: 100px; }
+        .box { background: var(--card); border: 1px solid #333; border-radius: 20px; padding: 25px; position: relative; }
+        .box::before { content: ""; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--gold); }
+        .box h2 { color: var(--gold); font-size: 1.8rem; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+        .row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; font-size: 1.1rem; }
+        .price { color: var(--gold); font-weight: 900; }
+
+        .btn-back {
+            position: fixed; bottom: 40px; right: 40px; width: 70px; height: 70px;
+            background: var(--gold); border-radius: 50%; display: none;
+            justify-content: center; align-items: center; cursor: pointer; z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="home">
+        <div class="dots"></div>
+        <div class="lang-nav">
+            <button class="l-btn active" onclick="setLang('ar')" id="b-ar">العربية</button>
+            <button class="l-btn" onclick="setLang('en')" id="b-en">ENGLISH</button>
+        </div>
+        <h1 class="main-logo" id="h-title">شبكة الإمارات</h1>
+        <p id="h-sub" style="font-size: 1.5rem; color: #ccc;">أفخم المأكولات الإماراتية والشامية</p>
+        
+        <button class="btn-enter" onclick="openMenu()" id="h-btn">قائمة الطعام</button>
+        
+        <div class="contact-footer">
+            <a href="tel:037555102" class="big-phone">037555102</a>
+            <a class="map-link" id="h-map" href="https://www.google.com/maps/dir/?api=1&destination=Emirates+Network+Restaurant+Al+Muwaiji" target="_blank">
+                📍 اضغط لفتح موقع المطعم فوراً
+            </a>
+        </div>
+    </div>
+
+    <div id="menu">
+        <h1 id="m-title" style="text-align: center; color: var(--gold); font-size: 3.5rem; margin-bottom: 50px;">قائمة الطعام</h1>
+        <div class="cat-grid" id="menuBody"></div>
+    </div>
+
+    <div class="btn-back" onclick="closeMenu()" id="backBtn">
+        <svg width="35" viewBox="0 0 24 24" fill="black"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/></svg>
+    </div>
+
+    <script>
+        let curLang = 'ar';
+        const data = {
+            ar: {
+                hT: "شبكة الإمارات", hS: "أفخم المأكولات الإماراتية والشامية", 
+                hB: "قائمة الطعام", 
+                hM: "📍 اضغط لفتح موقع المطعم فوراً", mT: "قائمة الطعام الملكية",
+                cats: { c1: "المشويات 🔥", c2: "الشاورما 🥙", c3: "المقبلات 🥗", c4: "العصائر 🥤", c5: "الصوصات 🍯" },
+                items: {
+                    c1: [{n: "مجبوس لحم", p: "45"}, {n: "مجبوس دجاج", p: "35"}, {n: "مشاوي مشكل كبير", p: "115"}, {n: "مشاوي مشكل صغير", p: "60"}, {n: "تكة", p: "40"}, {n: "كباب", p: "35"}, {n: "ريش غنم", p: "45"}],
+                    c2: [{n: "شاورما صاروخ", p: "15"}, {n: "شاورما عربي", p: "22"}, {n: "شاورما صحن", p: "45"}, {n: "همبرجر دجاج/لحم", p: "10"}, {n: "ساندوتش كفتة", p: "12"}],
+                    c3: [{n: "حمص", p: "14"}, {n: "متبل", p: "14"}, {n: "بابا غنوج", p: "15"}, {n: "فتوش", p: "16"}, {n: "تبولة", p: "16"}, {n: "ورق عنب", p: "20"}, {n: "كبة", p: "25"}],
+                    c4: [{n: "برتقال طازج", p: "15"}, {n: "عصير كوكتيل", p: "18"}, {n: "أفوكادو عسل", p: "22"}, {n: "ليمون نعناع", p: "15"}, {n: "مشروبات غازية", p: "4"}],
+                    c5: [{n: "ثومية", p: "5"}, {n: "شطة حارة", p: "3"}, {n: "طحينة", p: "5"}, {n: "صوص سبيشل", p: "5"}]
+                }
+            },
+            en: {
+                hT: "Emirates Network", hS: "Premium Emirati & Syrian Cuisine", 
+                hB: "FOOD MENU", 
+                hM: "📍 Click to open location now", mT: "ROYAL MENU",
+                cats: { c1: "Charcoal Grills 🔥", c2: "Shawarma 🥙", c3: "Appetizers 🥗", c4: "Fresh Juices 🥤", c5: "Side Sauces 🍯" },
+                items: {
+                    c1: [{n: "Lamb Machboos", p: "45"}, {n: "Chicken Machboos", p: "35"}, {n: "Mix Grill (Large)", p: "115"}, {n: "Mix Grill (Small)", p: "60"}, {n: "Tikka", p: "40"}, {n: "Kebab", p: "35"}, {n: "Lamb Chops", p: "45"}],
+                    c2: [{n: "Rocket Shawarma", p: "15"}, {n: "Arabic Shawarma", p: "22"}, {n: "Shawarma Plate", p: "45"}, {n: "Chicken/Meat Burger", p: "10"}, {n: "Kofta Sandwich", p: "12"}],
+                    c3: [{n: "Hummus", p: "14"}, {n: "Moutabbal", p: "14"}, {n: "Baba Ghanouj", p: "15"}, {n: "Fattoush", p: "16"}, {n: "Tabouleh", p: "16"}, {n: "Grape Leaves", p: "20"}, {n: "Kibbeh", p: "25"}],
+                    c4: [{n: "Fresh Orange", p: "15"}, {n: "Cocktail Juice", p: "18"}, {n: "Avocado Honey", p: "22"}, {n: "Lemon & Mint", p: "15"}, {n: "Soft Drinks", p: "4"}],
+                    c5: [{n: "Garlic Sauce", p: "5"}, {n: "Spicy Sauce", p: "3"}, {n: "Tahini", p: "5"}, {n: "Special Sauce", p: "5"}]
+                }
+            }
+        };
+
+        function setLang(l) {
+            curLang = l;
+            document.body.dir = (l === 'ar') ? 'rtl' : 'ltr';
+            document.getElementById('b-ar').classList.toggle('active', l === 'ar');
+            document.getElementById('b-en').classList.toggle('active', l === 'en');
+            render();
+        }
+
+        function render() {
+            const d = data[curLang];
+            document.getElementById('h-title').innerText = d.hT;
+            document.getElementById('h-sub').innerText = d.hS;
+            document.getElementById('h-btn').innerText = d.hB;
+            document.getElementById('h-map').innerText = d.hM;
+            document.getElementById('m-title').innerText = d.mT;
+
+            let html = '';
+            for (let k in d.cats) {
+                html += `<div class="box"><h2>${d.cats[k]}</h2>`;
+                d.items[k].forEach(i => {
+                    html += `<div class="row"><span>${i.n}</span><span class="price">${i.p} AED</span></div>`;
+                });
+                html += `</div>`;
+            }
+            document.getElementById('menuBody').innerHTML = html;
+        }
+
+        function openMenu() {
+            const m = document.getElementById('menu');
+            m.style.display = 'block';
+            m.className = 'menu-in';
+            document.getElementById('backBtn').style.display = 'flex';
+        }
+
+        function closeMenu() {
+            const m = document.getElementById('menu');
+            m.className = 'menu-out';
+            setTimeout(() => {
+                m.style.display = 'none';
+                document.getElementById('backBtn').style.display = 'none';
+            }, 1100);
+        }
+
+        render();
+    </script>
+</body>
+</html>
